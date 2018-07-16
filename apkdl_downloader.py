@@ -1,16 +1,16 @@
 import sys
+import warnings
 
 import requests
 
-# try:
-#     from urllib.parse import quote_plus
-# except ImportError:
-#     from urlparse import quote_plus
 try:
     from urllib import quote_plus  # Python 2.X
 except ImportError:
     from urllib.parse import quote_plus  # Python 3+
+
 from bs4 import BeautifulSoup
+from pyaxmlparser import APK
+from shutil import copyfile
 
 APPS = []
 
@@ -47,6 +47,25 @@ if len(sys.argv) > 1:
         print('Downloading {}.apk ...'.format(APPS[00][2].split('/')[-1]))
         download(APPS[00][2])
         print('Download completed!')
+        apk_file = format(APPS[00][2].split('/')[-1]) + '.apk'
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            apk = APK(apk_file)
+            # print(apk.package)
+            # print(apk.version_name)
+            apk_version_name = apk.version_name
+            # print(apk.version_code)
+            apk_version_code = apk.version_code
+            # print(apk.icon_info)
+            # print(apk.icon_data)
+            apk_name = apk.application
+            # print('Apk Name : '+apk_name)
+            print(apk_name + ' ' + apk_version_name + '_' + apk_version_code + '.apk')
+            # os.rename(apk_file, apk_name+' '+apk_version_name+'_'+apk_version_code+'.apk')
+            copyfile(apk_file, apk_name + ' ' + apk_version_name + '_' + apk_version_code + '.apk')
+            # os.remove(apk_file)
+            # shutil.move(apk_file, apk_name+' '+apk_version_name+'_'+apk_version_code+'.apk')
     else:
         print('No results')
 else:
