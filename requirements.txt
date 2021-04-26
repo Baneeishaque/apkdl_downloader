@@ -1,4 +1,4 @@
 requests
 bs4
-pyaxmlparser
+pyaxmlparser==0.3.26
 cx_Freeze
